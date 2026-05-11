@@ -1,0 +1,15 @@
+
+DOG REPORT
+====================
+
+Breed: boxer
+Confidence: 33.0 %
+
+Size: large
+
+Food: Ancestral Boxer Specific Blend
+Meals: 2 large meals per day (Morning & Night)
+Extras: Pumpkin puree and boiled chicken
+
+Generated:
+2026-05-11 14:50:18.369984
