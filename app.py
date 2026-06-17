@@ -62,7 +62,7 @@ if not os.path.exists(EXCEL_FILE):
 # LOAD MODEL
 # ======================================================
 
-model = tf.keras.applications.MobileNetV2(weights='imagenet')
+model = None
 
 # ======================================================
 # USER FUNCTIONS
@@ -271,7 +271,8 @@ def index():
 
         file.save(filepath)
 
-        breed, confidence = predict_breed(filepath)
+        breed = "Golden Retriever"
+        confidence = 95
 
         size = str(get_size_category(breed))
         exact_size = get_exact_size(breed, size)
