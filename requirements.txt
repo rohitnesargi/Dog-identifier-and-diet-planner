@@ -1,7 +1,4 @@
-Flask==2.3.2
-tensorflow==2.16.1
+gradio
 numpy
-Pillow
-openpyxl
-Werkzeug
-gunicorn
+pillow
+tensorflow-cpu==2.15.0
