@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="glass-card text-center" style="width: 100%; max-width: 600px; padding: 40px;">
+        <h2 class="page-title mb-4">Contact Us</h2>
+        <p class="page-subtitle mb-4">Have questions about your dog's diet? Reach out to us!</p>
+
+        <form>
+            <div class="mb-3 text-start">
+                <label class="form-label" style="font-weight: 500; color: var(--text-main);">Name</label>
+                <input type="text" name="name" pattern="[A-Za-z ]+" title="Only alphabets are allowed" oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')" required class="form-control">
+            </div>
+
+            <div class="mb-3 text-start">
+                <label class="form-label" style="font-weight: 500; color: var(--text-main);">Email</label>
+                <input type="email" name="email" required class="form-control">
+            </div>
+
+            <div class="mb-4 text-start">
+                <label class="form-label" style="font-weight: 500; color: var(--text-main);">Message</label>
+                <textarea name="message" rows="4" required class="form-control"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary-custom w-100 mb-3" style="font-size: 1.1rem;">Send Message</button>
+        </form>
+
+        <a href="{{ url_for('index') }}" class="back-btn">⬅ Back to Homepage</a>
+    </div>
+</div>
+{% endblock %}

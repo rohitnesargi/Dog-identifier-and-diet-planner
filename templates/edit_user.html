@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="glass-card text-center" style="width: 100%; max-width: 500px; padding: 40px;">
+        <h2 class="page-title mb-4">Edit User Profile</h2>
+
+        <form method="POST">
+            <div class="mb-3 text-start">
+                <label class="form-label" style="font-weight: 500;">Username</label>
+                <input type="text" name="username" value="{{ user.username }}" pattern="[A-Za-z ]+" title="Only alphabets are allowed" oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')" required class="form-control">
+            </div>
+
+            <div class="mb-3 text-start">
+                <label class="form-label" style="font-weight: 500;">Email</label>
+                <input type="email" name="email" value="{{ user.email }}" required class="form-control">
+            </div>
+
+            <div class="mb-4 text-start">
+                <label class="form-label" style="font-weight: 500;">Password</label>
+                <input type="password" name="password" value="{{ user.password }}" required class="form-control">
+            </div>
+
+            <button type="submit" class="btn btn-success w-100 mb-3" style="padding: 10px; font-weight: bold; border-radius: 8px;">Save Changes</button>
+        </form>
+
+        <a href="{{ url_for('admin_dashboard') }}" class="back-btn mt-2" style="background: var(--text-muted);">⬅ Back to Admin</a>
+    </div>
+</div>
+{% endblock %}

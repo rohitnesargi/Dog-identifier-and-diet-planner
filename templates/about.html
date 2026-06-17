@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center py-4" style="min-height: 80vh;">
+    <div class="glass-card" style="width: 100%; max-width: 950px; padding: 40px; background: rgba(255, 255, 255, 0.92); border: 1.5px solid rgba(255, 255, 255, 0.5); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+        
+        <!-- Header -->
+        <div class="mb-4">
+            <h1 class="page-title fw-bold text-dark mb-3 d-flex align-items-center" style="font-size: 2.2rem; border-bottom: 2px solid #e8f0fe; padding-bottom: 12px;">
+                <span class="me-2">🐶</span> Dog Identifier & Diet Planner
+            </h1>
+            <p style="font-size: 1.1rem; line-height: 1.7; color: var(--text-main); font-weight: 500;">
+                This application uses Artificial Intelligence to identify dog breeds from uploaded images and generate a suitable diet plan based on the breed and size of the dog.
+            </p>
+        </div>
+
+        <div class="row g-4 text-start">
+            <!-- Left Column -->
+            <div class="col-md-6">
+                <!-- Project Overview -->
+                <div class="mb-4">
+                    <h3 class="fw-bold text-dark d-flex align-items-center mb-3" style="font-size: 1.25rem;">
+                        <span class="me-2 text-danger">📌</span> Project Overview
+                    </h3>
+                    <p style="line-height: 1.7; color: var(--text-muted); text-align: justify; font-size: 0.95rem;">
+                        The Dog Identifier and Diet Planner is a smart web application built using Python and Flask. It allows users to upload a dog image and automatically detect the breed using a deep learning model. Based on the breed size, the system recommends a suitable diet plan.
+                    </p>
+                </div>
+
+                <!-- Purpose of System -->
+                <div class="mb-4">
+                    <h3 class="fw-bold text-dark d-flex align-items-center mb-3" style="font-size: 1.25rem;">
+                        <span class="me-2 text-success">🐾</span> Purpose of System
+                    </h3>
+                    <p style="line-height: 1.7; color: var(--text-muted); text-align: justify; font-size: 0.95rem;">
+                        Many dog owners are unaware of the correct nutritional needs of their pets. This system helps identify dog breeds and suggests proper food plans based on the breed category. Our goal is to promote better pet health through proper nutrition guidance.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-md-6">
+                <!-- Key Features -->
+                <div class="mb-4">
+                    <h3 class="fw-bold text-dark d-flex align-items-center mb-3" style="font-size: 1.25rem;">
+                        <span class="me-2 text-info">🎯</span> Key Features
+                    </h3>
+                    <ul class="list-unstyled d-flex flex-column gap-2" style="font-size: 0.95rem; color: var(--text-muted); padding-left: 10px;">
+                        <li class="d-flex align-items-center"><strong class="text-success me-2">•</strong> User Login & Registration</li>
+                        <li class="d-flex align-items-center"><strong class="text-success me-2">•</strong> Dog Image Upload</li>
+                        <li class="d-flex align-items-center"><strong class="text-success me-2">•</strong> AI Breed Identification</li>
+                        <li class="d-flex align-items-center"><strong class="text-success me-2">•</strong> Diet Recommendation</li>
+                        <li class="d-flex align-items-center"><strong class="text-success me-2">•</strong> Vaccination Reminder Dashboard</li>
+                        <li class="d-flex align-items-center"><strong class="text-success me-2">•</strong> Grooming Scheduler System</li>
+                    </ul>
+                </div>
+
+                <!-- How It Works -->
+                <div class="mb-4">
+                    <h3 class="fw-bold text-dark d-flex align-items-center mb-3" style="font-size: 1.25rem;">
+                        <span class="me-2 text-primary">🔄</span> How It Works
+                    </h3>
+                    <ol class="list-unstyled d-flex flex-column gap-2" style="font-size: 0.95rem; color: var(--text-muted); padding-left: 10px;">
+                        <li class="d-flex align-items-start"><strong class="text-primary me-2">1.</strong> <span>Upload a clear photo of your dog</span></li>
+                        <li class="d-flex align-items-start"><strong class="text-primary me-2">2.</strong> <span>AI analyzes and identifies the breed</span></li>
+                        <li class="d-flex align-items-start"><strong class="text-primary me-2">3.</strong> <span>Get personalized diet recommendations</span></li>
+                        <li class="d-flex align-items-start"><strong class="text-primary me-2">4.</strong> <span>Access additional care features</span></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center mt-4 pt-3" style="border-top: 1.5px dashed rgba(0, 0, 0, 0.1);">
+            <a href="{{ url_for('index') }}" class="btn btn-outline-primary py-2 px-4 fw-bold hover-scale" style="border-radius: 8px;">
+                ⬅ Back to Homepage
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

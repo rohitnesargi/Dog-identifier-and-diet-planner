@@ -1,0 +1,376 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Add Google Fonts and FontAwesome -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Premium Background -->
+<div class="result-bg"></div>
+
+<div class="container py-5 position-relative" style="z-index: 10; font-family: 'Poppins', sans-serif;">
+    <!-- Animated Header -->
+    <div class="text-center mb-5 fade-in-up">
+        <h1 class="fw-bold text-white mb-2" style="font-size: 2.8rem; text-shadow: 0 4px 15px rgba(0,0,0,0.3);">Analysis Complete</h1>
+        <p class="fs-5" style="color: rgba(255,255,255,0.85); font-weight: 300;">Your dog's precise profile and expert dietary plan</p>
+    </div>
+
+    <div class="row justify-content-center fade-in-up" style="animation-delay: 0.2s;">
+        <div class="col-xl-10">
+            <!-- Premium Glass Card -->
+            <div class="premium-glass-card shadow-lg">
+                <div class="row g-0 align-items-stretch">
+                    
+                    <!-- Left Column: Image -->
+                    <div class="col-lg-5 p-4 d-flex flex-column align-items-center justify-content-center image-column">
+                        <div class="image-wrapper shadow">
+                            <img src="/{{ image }}" class="img-fluid dog-img" alt="Analyzed Dog Image">
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column: Data -->
+                    <div class="col-lg-7 p-5 d-flex flex-column data-column">
+                        
+                        <!-- Breed Title Area -->
+                        <div class="mb-4">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="size-pill shadow-sm"><i class="fa-solid fa-ruler-vertical me-1"></i> {{ size }} Breed</span>
+                            </div>
+                            <h2 class="breed-title">{{ breed | replace('_', ' ') }}</h2>
+                        </div>
+                        
+                        <!-- Physical Stats Glass Cards -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-sm-6">
+                                <div class="stat-glass-card hover-lift">
+                                    <div class="stat-icon-box text-primary shadow-sm">
+                                        <i class="fa-solid fa-weight-scale"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <small>Est. Weight</small>
+                                        <strong>{{ exact_size.weight }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="stat-glass-card hover-lift">
+                                    <div class="stat-icon-box text-info shadow-sm">
+                                        <i class="fa-solid fa-text-height"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <small>Est. Height</small>
+                                        <strong>{{ exact_size.height }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Diet Section -->
+                        <h5 class="diet-header mt-2 mb-3"><i class="fa-solid fa-bowl-food me-2"></i> Expert Diet Plan</h5>
+                        
+                        <div class="diet-list mb-4">
+                            <div class="diet-item">
+                                <div class="diet-icon bg-gradient-primary shadow-sm"><i class="fa-solid fa-bone text-white"></i></div>
+                                <div class="diet-text">
+                                    <h6>Recommended Food</h6>
+                                    <span>{{ diet.food }}</span>
+                                </div>
+                            </div>
+                            <div class="diet-item">
+                                <div class="diet-icon bg-gradient-warning shadow-sm"><i class="fa-regular fa-clock text-white"></i></div>
+                                <div class="diet-text">
+                                    <h6>Feeding Schedule</h6>
+                                    <span>{{ diet.meals }}</span>
+                                </div>
+                            </div>
+                            <div class="diet-item">
+                                <div class="diet-icon bg-gradient-success shadow-sm"><i class="fa-solid fa-leaf text-white"></i></div>
+                                <div class="diet-text">
+                                    <h6>Healthy Extras</h6>
+                                    <span>{{ diet.extras }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="mt-auto action-grid">
+                            <a href="{{ url_for('index') }}" class="btn-premium btn-light-glass hover-lift">
+                                <i class="fa-solid fa-arrow-left me-2"></i> Back
+                            </a>
+                            <a href="{{ url_for('download_report') }}" class="btn-premium btn-dark-glass hover-lift">
+                                <i class="fa-solid fa-file-pdf me-2"></i> Report
+                            </a>
+                            <a href="{{ youtube_link }}" target="_blank" class="btn-premium btn-youtube hover-lift text-white">
+                                <i class="fa-brands fa-youtube me-2"></i> Videos
+                            </a>
+                            <a href="{{ amazon_link }}" target="_blank" class="btn-premium btn-amazon hover-lift text-white">
+                                <i class="fa-brands fa-amazon me-2"></i> Buy Food
+                            </a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Premium Background */
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #0f172a !important; /* Fallback */
+    }
+    .result-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.75)), url('/static/images/n.jpg') no-repeat center center;
+        background-size: cover;
+        z-index: 0;
+    }
+
+    /* Glass Card Base */
+    .premium-glass-card {
+        background: rgba(15, 23, 42, 0.95); /* Solid dark slate with very low transparency */
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Left Image Column */
+    .image-column {
+        background: rgba(0, 0, 0, 0.4);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .image-wrapper {
+        width: 100%;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 4px solid rgba(255,255,255,0.15);
+    }
+    .dog-img {
+        width: 100%;
+        height: 420px;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    .image-wrapper:hover .dog-img {
+        transform: scale(1.05);
+    }
+    
+    .match-badge {
+        background: rgba(255, 255, 255, 0.9);
+        color: #1e293b;
+        padding: 10px 20px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1rem;
+        letter-spacing: 0.5px;
+    }
+
+    /* Right Data Column */
+    .data-column {
+        color: white;
+    }
+    
+    .size-pill {
+        background: rgba(56, 189, 248, 0.2);
+        color: #38bdf8;
+        padding: 6px 14px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .breed-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        text-transform: capitalize;
+        background: linear-gradient(120deg, #ffffff, #e2e8f0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.5px;
+        margin-top: 5px;
+    }
+
+    /* Stat Cards */
+    .stat-glass-card {
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: all 0.3s ease;
+    }
+    .stat-glass-card:hover {
+        background: rgba(255, 255, 255, 0.18);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+    .stat-icon-box {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+    .stat-content small {
+        display: block;
+        color: #94a3b8;
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 0.7rem;
+        letter-spacing: 0.5px;
+        margin-bottom: 2px;
+    }
+    .stat-content strong {
+        color: #f8fafc;
+        font-size: 1.05rem;
+        font-weight: 600;
+    }
+
+    /* Diet Section */
+    .diet-header {
+        color: #e2e8f0;
+        font-weight: 700;
+        font-size: 1.1rem;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 10px;
+    }
+    .diet-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .diet-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .diet-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+    }
+    .bg-gradient-primary { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+    .bg-gradient-warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .bg-gradient-success { background: linear-gradient(135deg, #10b981, #059669); }
+    
+    .diet-text h6 {
+        margin: 0 0 3px 0;
+        color: #f8fafc;
+        font-weight: 700;
+        font-size: 0.95rem;
+    }
+    .diet-text span {
+        color: #cbd5e1;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    /* Action Buttons */
+    .action-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 10px;
+    }
+    
+    .btn-premium {
+        padding: 12px 15px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+    }
+    .btn-light-glass {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .btn-light-glass:hover {
+        background: rgba(255, 255, 255, 0.25);
+        color: white;
+    }
+    .btn-dark-glass {
+        background: rgba(0, 0, 0, 0.3);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .btn-dark-glass:hover {
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+    }
+    .btn-youtube {
+        background: linear-gradient(135deg, #ff0000, #cc0000);
+        box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+    }
+    .btn-amazon {
+        background: linear-gradient(135deg, #ff9900, #e68a00);
+        box-shadow: 0 4px 15px rgba(255, 153, 0, 0.3);
+    }
+    
+    .hover-lift {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .hover-lift:hover {
+        transform: translateY(-3px);
+    }
+
+    /* Animations */
+    .fade-in-up {
+        animation: fadeInUp 0.6s ease-out forwards;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 991px) {
+        .image-column {
+            border-right: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .dog-img {
+            height: 300px;
+        }
+    }
+    @media (max-width: 576px) {
+        .action-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}

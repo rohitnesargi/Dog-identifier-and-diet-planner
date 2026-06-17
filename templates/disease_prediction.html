@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="glass-card p-5 mx-auto" style="max-width: 900px; background: rgba(255, 255, 255, 0.85);">
+        <h1 class="page-title text-center fw-bold mb-1" style="font-size: 2.5rem; color: #2c3e50;">🩺 Disease Prediction</h1>
+        <p class="text-muted text-center mb-5">Select your dog's current symptoms to analyze potential health issues early.</p>
+
+        <!-- Symptoms Selection -->
+        <div class="glass-sub-card p-4 mb-4">
+            <h3 class="fw-bold mb-4 text-dark" style="font-size: 1.5rem;">Select Symptoms</h3>
+            
+            <form id="symptomForm">
+                <div class="row g-3 mb-4">
+                    <!-- Vomiting -->
+                    <div class="col-md-6 col-lg-3">
+                        <label class="symptom-checkbox-card" id="card-vomiting">
+                            <input type="checkbox" name="symptoms" value="vomiting" onchange="toggleCard('vomiting')">
+                            <div class="fs-2 mb-2">🤢</div>
+                            <div class="fw-semibold text-dark">Vomiting</div>
+                        </label>
+                    </div>
+
+                    <!-- Diarrhea -->
+                    <div class="col-md-6 col-lg-3">
+                        <label class="symptom-checkbox-card" id="card-diarrhea">
+                            <input type="checkbox" name="symptoms" value="diarrhea" onchange="toggleCard('diarrhea')">
+                            <div class="fs-2 mb-2">💩</div>
+                            <div class="fw-semibold text-dark">Diarrhea</div>
+                        </label>
+                    </div>
+
+                    <!-- Lethargy -->
+                    <div class="col-md-6 col-lg-3">
+                        <label class="symptom-checkbox-card" id="card-lethargy">
+                            <input type="checkbox" name="symptoms" value="lethargy" onchange="toggleCard('lethargy')">
+                            <div class="fs-2 mb-2">🥱</div>
+                            <div class="fw-semibold text-dark">Lethargy</div>
+                        </label>
+                    </div>
+
+                    <!-- Loss of Appetite -->
+                    <div class="col-md-6 col-lg-3">
+                        <label class="symptom-checkbox-card" id="card-appetite">
+                            <input type="checkbox" name="symptoms" value="appetite" onchange="toggleCard('appetite')">
+                            <div class="fs-2 mb-2">🍽️</div>
+                            <div class="fw-semibold text-dark">Loss of Appetite</div>
+                        </label>
+                    </div>
+
+                    <!-- Coughing -->
+                    <div class="col-md-6 col-lg-3">
+                        <label class="symptom-checkbox-card" id="card-coughing">
+                            <input type="checkbox" name="symptoms" value="coughing" onchange="toggleCard('coughing')">
+                            <div class="fs-2 mb-2">💨</div>
+                            <div class="fw-semibold text-dark">Coughing</div>
+                        </label>
+                    </div>
+
+                    <!-- Fever -->
+                    <div class="col-md-6 col-lg-3">
+                        <label class="symptom-checkbox-card" id="card-fever">
+                            <input type="checkbox" name="symptoms" value="fever" onchange="toggleCard('fever')">
+                            <div class="fs-2 mb-2">🥵</div>
+                            <div class="fw-semibold text-dark">Fever</div>
+                        </label>
+                    </div>
+
+                    <!-- Itchy Skin -->
+                    <div class="col-md-6 col-lg-3">
+                        <label class="symptom-checkbox-card" id="card-itchy">
+                            <input type="checkbox" name="symptoms" value="itchy" onchange="toggleCard('itchy')">
+                            <div class="fs-2 mb-2">🐕</div>
+                            <div class="fw-semibold text-dark">Itchy Skin</div>
+                        </label>
+                    </div>
+
+                    <!-- Limping -->
+                    <div class="col-md-6 col-lg-3">
+                        <label class="symptom-checkbox-card" id="card-limping">
+                            <input type="checkbox" name="symptoms" value="limping" onchange="toggleCard('limping')">
+                            <div class="fs-2 mb-2">🦵</div>
+                            <div class="fw-semibold text-dark">Limping</div>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="button" onclick="analyzeSymptoms()" class="btn btn-primary w-100 py-3 fw-bold fs-5" style="border-radius: 10px; background-color: #3b5998; border: none;">
+                    Analyze Health 🚀
+                </button>
+            </form>
+        </div>
+
+        <!-- Result Display Container (Hidden Initially) -->
+        <div id="resultContainer" class="glass-sub-card p-4 mt-5 d-none animate-fade-in" style="border: 2px solid rgba(220, 53, 69, 0.3); background-color: rgba(255, 255, 255, 0.95);">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold text-danger mb-0" style="font-size: 1.6rem;">Analysis Result</h3>
+                <span id="riskBadge" class="badge bg-danger px-3 py-2 fs-6" style="border-radius: 20px;">HIGH RISK ⚠️</span>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <div class="text-muted fs-7 mb-1">PREDICTED CONDITION</div>
+                    <div id="diseaseName" class="fw-bold text-dark fs-4 mb-3">Canine Parvovirus</div>
+
+                    <div class="text-muted fs-7 mb-1">ANALYSIS CONFIDENCE</div>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="progress flex-grow-1" style="height: 12px; border-radius: 6px; background-color: #e9ecef;">
+                            <div id="confidenceBar" class="progress-bar bg-danger" role="progressbar" style="width: 92%; border-radius: 6px;"></div>
+                        </div>
+                        <span id="confidenceText" class="fw-bold text-dark fs-6">92%</span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="text-muted fs-7 mb-1">PROFESSIONAL MEDICAL ADVICE</div>
+                    <p id="diseaseAdvice" class="text-dark fs-6" style="line-height: 1.6;">
+                        This is a severe medical emergency. Immediately contact a professional veterinarian. Keep your dog isolated and hydrated.
+                    </p>
+                </div>
+            </div>
+
+            <div class="alert alert-warning mb-0 border-0 d-flex align-items-start gap-2" style="background-color: rgba(255, 193, 7, 0.15); color: #664d03; border-radius: 8px;">
+                <span class="fs-5">ℹ️</span>
+                <p class="mb-0 fs-7" style="line-height: 1.5;">
+                    <strong>Disclaimer:</strong> This automated analyzer is for informational/educational purposes only and is not a replacement for veterinary medicine. If your dog is in acute pain or distress, consult a certified veterinarian immediately.
+                </p>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="{{ url_for('services') }}" class="back-btn" style="margin-top: 0;">⬅ Back to Services</a>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleCard(symptom) {
+    const cardMap = {
+        'vomiting': 'card-vomiting',
+        'diarrhea': 'card-diarrhea',
+        'lethargy': 'card-lethargy',
+        'appetite': 'card-appetite',
+        'coughing': 'card-coughing',
+        'fever': 'card-fever',
+        'itchy': 'card-itchy',
+        'limping': 'card-limping'
+    };
+    const cardId = cardMap[symptom];
+    const card = document.getElementById(cardId);
+    if (!card) return;
+    
+    const checkbox = card.querySelector('input[type="checkbox"]');
+    if (checkbox.checked) {
+        card.classList.add('selected');
+    } else {
+        card.classList.remove('selected');
+    }
+}
+
+function analyzeSymptoms() {
+    const checkboxes = document.querySelectorAll('input[name="symptoms"]:checked');
+    const symptoms = Array.from(checkboxes).map(c => c.value);
+    
+    if (symptoms.length === 0) {
+        alert("Please select at least one symptom to analyze!");
+        return;
+    }
+
+    const container = document.getElementById('resultContainer');
+    const riskBadge = document.getElementById('riskBadge');
+    const diseaseName = document.getElementById('diseaseName');
+    const confidenceBar = document.getElementById('confidenceBar');
+    const confidenceText = document.getElementById('confidenceText');
+    const diseaseAdvice = document.getElementById('diseaseAdvice');
+
+    // Remove d-none to show container
+    container.classList.remove('d-none');
+
+    // Diagnosis Logic
+    if (symptoms.includes('vomiting') && symptoms.includes('diarrhea') && (symptoms.includes('lethargy') || symptoms.includes('appetite'))) {
+        // Parvovirus
+        diseaseName.textContent = "Canine Parvovirus";
+        riskBadge.textContent = "HIGH RISK ⚠️";
+        riskBadge.className = "badge bg-danger px-3 py-2 fs-6";
+        confidenceBar.className = "progress-bar bg-danger";
+        confidenceBar.style.width = "92%";
+        confidenceText.textContent = "92%";
+        diseaseAdvice.textContent = "This is a severe medical emergency. Immediately contact a professional veterinarian. Keep your dog isolated and hydrated as dehydration is extremely critical.";
+        container.style.borderColor = "rgba(220, 53, 69, 0.5)";
+    } 
+    else if (symptoms.includes('coughing') && (symptoms.includes('fever') || symptoms.includes('lethargy'))) {
+        // Kennel Cough
+        diseaseName.textContent = "Kennel Cough";
+        riskBadge.textContent = "MEDIUM RISK ⚠️";
+        riskBadge.className = "badge bg-warning text-dark px-3 py-2 fs-6";
+        confidenceBar.className = "progress-bar bg-warning";
+        confidenceBar.style.width = "85%";
+        confidenceText.textContent = "85%";
+        diseaseAdvice.textContent = "Keep your dog in a warm, humid environment. Avoid any collar pressure on the throat. Allow plenty of rest and consult a vet for cough suppressants or antibiotics if necessary.";
+        container.style.borderColor = "rgba(255, 193, 7, 0.5)";
+    }
+    else if (symptoms.includes('itchy') && symptoms.includes('appetite') === false) {
+        // Allergies
+        diseaseName.textContent = "Skin Allergies / Fleas";
+        riskBadge.textContent = "LOW RISK ✅";
+        riskBadge.className = "badge bg-success px-3 py-2 fs-6";
+        confidenceBar.className = "progress-bar bg-success";
+        confidenceBar.style.width = "88%";
+        confidenceText.textContent = "88%";
+        diseaseAdvice.textContent = "Use a mild hypoallergenic dog shampoo. Thoroughly check the coat for fleas and ticks. Consult your veterinarian for appropriate flea prevention or allergy relief medication.";
+        container.style.borderColor = "rgba(25, 135, 84, 0.5)";
+    }
+    else if (symptoms.includes('limping')) {
+        // Arthritis / Sprain
+        diseaseName.textContent = "Joint Inflammation / Strain";
+        riskBadge.textContent = "MEDIUM RISK ⚠️";
+        riskBadge.className = "badge bg-warning text-dark px-3 py-2 fs-6";
+        confidenceBar.className = "progress-bar bg-warning";
+        confidenceBar.style.width = "78%";
+        confidenceText.textContent = "78%";
+        diseaseAdvice.textContent = "Avoid any strenuous running or jumping. Ensure your dog has thick, supportive bedding to sleep on. Consult a veterinarian for joint supplements (like Glucosamine) or safe anti-inflammatories.";
+        container.style.borderColor = "rgba(255, 193, 7, 0.5)";
+    }
+    else {
+        // Mild Gastric Distress
+        diseaseName.textContent = "Mild Gastric Distress / Fatigue";
+        riskBadge.textContent = "LOW RISK ✅";
+        riskBadge.className = "badge bg-success px-3 py-2 fs-6";
+        confidenceBar.className = "progress-bar bg-success";
+        confidenceBar.style.width = "65%";
+        confidenceText.textContent = "65%";
+        diseaseAdvice.textContent = "Provide a bland diet (plain white rice and boiled chicken breast). Ensure fresh water is always available. Monitor for the next 24 hours; if symptoms persist or worsen, contact a vet.";
+        container.style.borderColor = "rgba(25, 135, 84, 0.5)";
+    }
+    
+    // Smooth scroll to results
+    container.scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+{% endblock %}

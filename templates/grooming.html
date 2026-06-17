@@ -1,0 +1,483 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Healthcare Vibe Style Overrides -->
+    <style>
+        body {
+            background: #f0f4f8 url('/static/images/d1.jpeg') no-repeat center center fixed !important;
+            background-size: cover !important;
+        }
+        .text-primary-custom {
+            color: #1a73e8 !important;
+        }
+        .bg-primary-custom {
+            background-color: #1a73e8 !important;
+        }
+        .badge-pending {
+            background-color: #fef7e0;
+            color: #b06000;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(240, 180, 0, 0.2);
+        }
+        .badge-approved {
+            background-color: #e6f4ea;
+            color: #137333;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(19, 115, 51, 0.2);
+        }
+        .badge-rejected {
+            background-color: #fce8e6;
+            color: #c5221f;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(197, 34, 31, 0.2);
+        }
+        .badge-scheduled {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(26, 115, 232, 0.2);
+        }
+        .badge-completed {
+            background-color: #d1e7dd;
+            color: #0f5132;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(15, 81, 50, 0.2);
+        }
+        .badge-cancelled {
+            background-color: #e2e3e5;
+            color: #6c757d;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(108, 117, 125, 0.2);
+        }
+        .hover-scale {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .hover-scale:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08) !important;
+        }
+        .booking-card {
+            border: 1px solid rgba(26, 115, 232, 0.1);
+            border-radius: 14px;
+            background: rgba(255,255,255,0.9);
+            transition: all 0.2s ease;
+        }
+        .booking-card:hover {
+            border-color: rgba(26, 115, 232, 0.3);
+            background: #ffffff;
+        }
+    </style>
+
+    <div class="glass-card p-5 mx-auto" style="max-width: 1100px; background: rgba(255, 255, 255, 0.95); border: 1.5px solid rgba(26, 115, 232, 0.15);">
+        
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="page-title fw-bold mb-1 text-primary-custom" style="font-size: 2.8rem;">✂️ Grooming Scheduler</h1>
+            <p class="text-muted fs-5">Pamper your furry friend with our certified pet grooming services. Simple, fast spa bookings.</p>
+        </div>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, msg in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' or category == 'danger' else 'warning' if category == 'warning' else 'success' }} alert-dismissible fade show mb-4 border-0" role="alert" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                        {{ msg }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Reminders / Notifications Section -->
+        {% if reminders %}
+            <div class="mb-4">
+                <div class="card border-0 shadow-sm" style="background: rgba(230, 244, 234, 0.9); border-left: 5px solid #137333 !important; border-radius: 12px;">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold text-success mb-3 d-flex align-items-center">
+                            <span class="fs-4 me-2">🔔</span> Grooming Appointment Alerts
+                        </h5>
+                        <ul class="list-unstyled mb-0 d-flex flex-column gap-2">
+                            {% for rem in reminders %}
+                                <li class="fw-semibold text-dark p-2 rounded-2" style="background: rgba(255,255,255,0.5);">
+                                    {{ rem }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Content Grid -->
+        <div class="row g-4">
+            <!-- Left Pane: Booking Form -->
+            <div class="col-lg-5">
+                <div class="glass-sub-card p-4 shadow-sm border" style="background: rgba(255, 255, 255, 0.7); border-radius: 15px; border-color: rgba(26, 115, 232, 0.1) !important;">
+                    <h3 class="fw-bold mb-4 text-primary-custom" style="font-size: 1.5rem; border-bottom: 2px solid #e8f0fe; padding-bottom: 10px;">📅 Book Spa Day</h3>
+                    
+                    <form method="POST" action="{{ url_for('grooming') }}" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="pet_name" class="form-label form-label-bold">Pet Name</label>
+                            <input type="text" class="form-input-premium" id="pet_name" name="pet_name" placeholder="Buddy, Lucy" required>
+                            <div class="invalid-feedback">Please enter your pet's name.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="service_type" class="form-label form-label-bold">Grooming Service</label>
+                            <select class="form-input-premium" id="service_type" name="service_type" required>
+                                <option value="" disabled selected>-- Select Grooming Service --</option>
+                                <option value="Bath & Brush">Bath & Brush (Basic Wash, Drying, Brushing)</option>
+                                <option value="Full Grooming">Full Grooming (Bath, Cut, Nails, Ears, Teeth)</option>
+                                <option value="Nail Trimming">Nail Trimming (Claw clipping & filing)</option>
+                                <option value="Hair Cutting">Hair Cutting & Styling</option>
+                                <option value="Ear Cleaning">Ear Cleaning & Sanitation</option>
+                                <option value="Teeth Cleaning">Teeth Cleaning & Breath Refresh</option>
+                            </select>
+                            <div class="invalid-feedback">Please choose a grooming service.</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="date" class="form-label form-label-bold">Select Date</label>
+                                <input type="date" class="form-input-premium" id="date" name="date" required min="{{ today }}">
+                                <div class="invalid-feedback" id="groomingDateError">Please select a valid future date.</div>
+                                <small class="text-muted">Note: You can only book grooming for today or future dates.</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="time" class="form-label form-label-bold">Select Time</label>
+                                <select class="form-input-premium" id="time" name="time" required>
+                                    <option value="" disabled selected>-- Select Time --</option>
+                                    <option value="09:00">9:00 AM</option>
+                                    <option value="10:00">10:00 AM</option>
+                                    <option value="11:00">11:00 AM</option>
+                                    <option value="12:00">12:00 PM</option>
+                                    <option value="13:00">1:00 PM</option>
+                                    <option value="14:00">2:00 PM</option>
+                                    <option value="15:00">3:00 PM</option>
+                                    <option value="16:00">4:00 PM</option>
+                                    <option value="17:00">5:00 PM</option>
+                                    <option value="18:00">6:00 PM</option>
+                                    <option value="19:00">7:00 PM</option>
+                                    <option value="20:00">8:00 PM</option>
+                                </select>
+                                <div class="invalid-feedback">Please select a time slot.</div>
+                                <small class="text-muted">Available grooming hours: 9:00 AM - 8:00 PM</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="special_instruction" class="form-label form-label-bold">Special Instructions / Allergies</label>
+                            <textarea class="form-input-premium" id="special_instruction" name="special_instruction" rows="3" placeholder="e.g. Scared of dryers, sensitive skin..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-3 fw-bold text-white hover-scale" style="border-radius: 10px; background-color: #1a73e8; border: none; box-shadow: 0 4px 12px rgba(26, 115, 232, 0.35);">
+                            Submit Booking
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Pane: Booking History List -->
+            <div class="col-lg-7">
+                <div class="glass-sub-card p-4 shadow-sm border h-100" style="background: rgba(255, 255, 255, 0.7); border-radius: 15px; border-color: rgba(26, 115, 232, 0.1) !important;">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4" style="border-bottom: 2px solid #e8f0fe; padding-bottom: 15px;">
+                        <h3 class="fw-bold mb-0 text-primary-custom" style="font-size: 1.5rem;">📋 Grooming Appointments</h3>
+                        <!-- Search Bar -->
+                        <div class="position-relative w-100" style="max-width: 250px;">
+                            <input type="text" id="groomingSearch" onkeyup="filterGrooming()" class="form-control form-control-sm py-2 px-3 shadow-none border" style="border-radius: 30px; font-size: 0.9rem;" placeholder="Search pet or service...">
+                        </div>
+                    </div>
+                    
+                    <div id="groomingListContainer" style="max-height: 550px; overflow-y: auto; padding-right: 5px;">
+                        {% if records %}
+                            {% for r in records %}
+                            <div class="card booking-card shadow-sm mb-3 p-3 grooming-item">
+                                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2 mb-2">
+                                    <div>
+                                        <span class="fs-5 me-1">🐶</span>
+                                        <strong class="text-dark search-pet">{{ r.pet_name }}</strong>
+                                        <span class="text-muted mx-2">|</span>
+                                        <span class="fw-semibold text-secondary search-service">{{ r.service_type }}</span>
+                                    </div>
+                                    <div>
+                                        {% if r.status == 'Pending Approval' %}
+                                            <span class="badge-pending">Pending</span>
+                                        {% elif r.status == 'Approved' %}
+                                            <span class="badge-approved">Approved</span>
+                                        {% elif r.status == 'Rejected' %}
+                                            <span class="badge-rejected">Rejected</span>
+                                        {% elif r.status == 'Scheduled' %}
+                                            <span class="badge-scheduled">Scheduled</span>
+                                        {% elif r.status == 'Completed' %}
+                                            <span class="badge-completed">Completed</span>
+                                        {% elif r.status == 'Cancelled' %}
+                                            <span class="badge-cancelled">Cancelled</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-wrap gap-3 text-secondary small mb-3">
+                                    <div>📅 <strong>Date:</strong> {{ r.grooming_date }}</div>
+                                    <div>⏰ <strong>Time:</strong> {{ r.grooming_time_12hr }}</div>
+                                </div>
+                                
+                                {% if r.special_instruction %}
+                                    <div class="bg-light p-2 rounded mb-2 small text-dark" style="border-left: 3px solid #1a73e8; font-size: 0.85rem;">
+                                        <strong>Notes:</strong> {{ r.special_instruction }}
+                                    </div>
+                                {% endif %}
+                                
+                                {% if r.admin_remark %}
+                                    <div class="bg-warning-subtle p-2 rounded mb-2 small text-dark" style="border-left: 3px solid #ffc107; font-size: 0.85rem; background-color: #fffef0;">
+                                        <strong>Admin Remark:</strong> {{ r.admin_remark }}
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="d-flex gap-2 justify-content-end mt-2">
+                                    {% if r.status == 'Pending Approval' or r.status == 'Approved' %}
+                                        <!-- Reschedule Button -->
+                                        <button type="button" onclick="triggerReschedule('{{ r.id }}', '{{ r.pet_name }}', '{{ r.service_type }}', '{{ r.grooming_date }}', '{{ r.grooming_time }}')" class="btn btn-sm btn-outline-primary py-1 px-3 fw-bold hover-scale" style="font-size: 0.8rem; border-radius: 6px;">
+                                            📅 Reschedule
+                                        </button>
+                                        <!-- Cancel Form -->
+                                        <form method="POST" action="{{ url_for('cancel_grooming', booking_id=r.id) }}" onsubmit="return confirm('Are you sure you want to cancel this booking?');" style="display:inline;">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger py-1 px-3 fw-bold hover-scale" style="font-size: 0.8rem; border-radius: 6px;">
+                                                🚫 Cancel
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <span class="text-muted small">Closed session log</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center text-muted py-5">
+                                <div class="fs-1">🛁</div>
+                                <div class="fw-semibold mt-2">No grooming appointments booked.</div>
+                                <small class="text-black-50">Create your first booking using the scheduler form.</small>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="{{ url_for('services') }}" class="btn btn-outline-primary py-2 px-5 fw-bold hover-scale" style="border-radius: 30px; border-color: #1a73e8; color: #1a73e8;">
+                ⬅ Back to Services
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Reschedule Appointment Modal -->
+<div class="modal fade" id="rescheduleModal" tabindex="-1" aria-labelledby="rescheduleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden; background: rgba(255,255,255,0.98);">
+      <div class="modal-header text-white py-3" style="background: #1a73e8;">
+        <h5 class="modal-title fw-bold" id="rescheduleModalLabel">📅 Reschedule Booking</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="rescheduleForm" method="POST">
+        <div class="modal-body p-4">
+          <p class="text-muted small mb-4">Choose a new date and time for <strong id="reschedulePetName">Buddy</strong>'s <span id="rescheduleService">Grooming</span> session. Note: Rescheduling resets status to 'Pending Approval'.</p>
+          <div class="row">
+              <div class="col-6 mb-3">
+                  <label class="form-label fw-bold text-dark">New Date</label>
+                  <input type="date" class="form-control py-2 border shadow-none" name="date" id="rescheduleDateField" required style="border-radius: 8px;" min="{{ today }}">
+                  <div class="invalid-feedback" id="rescheduleError">Please select a valid future date.</div>
+              </div>
+              <div class="col-6 mb-3">
+                  <label class="form-label fw-bold text-dark">New Time</label>
+                  <select class="form-control py-2 border shadow-none" name="time" id="rescheduleTimeField" required style="border-radius: 8px;">
+                      <option value="" disabled selected>-- Select Time --</option>
+                      <option value="09:00">9:00 AM</option>
+                      <option value="10:00">10:00 AM</option>
+                      <option value="11:00">11:00 AM</option>
+                      <option value="12:00">12:00 PM</option>
+                      <option value="13:00">1:00 PM</option>
+                      <option value="14:00">2:00 PM</option>
+                      <option value="15:00">3:00 PM</option>
+                      <option value="16:00">4:00 PM</option>
+                      <option value="17:00">5:00 PM</option>
+                      <option value="18:00">6:00 PM</option>
+                      <option value="19:00">7:00 PM</option>
+                      <option value="20:00">8:00 PM</option>
+                  </select>
+              </div>
+          </div>
+        </div>
+        <div class="modal-footer border-0 p-3 bg-light">
+          <button type="button" class="btn btn-secondary px-4 fw-semibold" data-bs-dismiss="modal" style="border-radius: 8px;">Close</button>
+          <button type="submit" class="btn btn-primary px-4 fw-bold" style="background: #1a73e8; border: none; border-radius: 8px;">Update Booking</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Custom client-side scripts -->
+<script>
+    // Trigger the rescheduling modal and configure form action dynamically
+    function triggerReschedule(bookingId, petName, serviceType, currentDate, currentTime) {
+        document.getElementById('reschedulePetName').textContent = petName;
+        document.getElementById('rescheduleService').textContent = serviceType;
+        document.getElementById('rescheduleDateField').value = currentDate;
+        
+        // Set the current time in the dropdown
+        const timeDropdown = document.getElementById('rescheduleTimeField');
+        timeDropdown.value = currentTime;
+        
+        const form = document.getElementById('rescheduleForm');
+        form.action = "{{ url_for('reschedule_grooming', booking_id=0) }}".replace('/0', '/' + bookingId);
+        
+        const modal = new bootstrap.Modal(document.getElementById('rescheduleModal'));
+        modal.show();
+    }
+
+    // Client-side quick filter
+    function filterGrooming() {
+        const input = document.getElementById("groomingSearch");
+        const filter = input.value.toLowerCase().trim();
+        const items = document.getElementsByClassName("grooming-item");
+        
+        for (let i = 0; i < items.length; i++) {
+            const petNode = items[i].getElementsByClassName("search-pet")[0];
+            const serviceNode = items[i].getElementsByClassName("search-service")[0];
+            
+            if (petNode && serviceNode) {
+                const petName = petNode.textContent || petNode.innerText;
+                const service = serviceNode.textContent || serviceNode.innerText;
+                
+                if (petName.toLowerCase().indexOf(filter) > -1 || service.toLowerCase().indexOf(filter) > -1) {
+                    items[i].style.display = "";
+                } else {
+                    items[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    // Enhanced form validation with date validation
+    (function () {
+      'use strict'
+      var forms = document.querySelectorAll('.needs-validation')
+      Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+          form.addEventListener('submit', function (event) {
+            // Custom date validation for main form
+            const dateInput = document.getElementById('date');
+            if (dateInput) {
+                const dateError = document.getElementById('groomingDateError');
+                const selectedDate = new Date(dateInput.value);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                if (selectedDate < today) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    dateInput.setCustomValidity('Older dates are not allowed!');
+                    if (dateError) dateError.textContent = 'Older dates are not allowed!';
+                    dateInput.classList.add('is-invalid');
+                } else {
+                    dateInput.setCustomValidity('');
+                    dateInput.classList.remove('is-invalid');
+                }
+            }
+            
+            // Custom date validation for reschedule modal
+            const rescheduleDateInput = document.getElementById('rescheduleDateField');
+            if (rescheduleDateInput && rescheduleDateInput.value) {
+                const rescheduleError = document.getElementById('rescheduleError');
+                const selectedDate = new Date(rescheduleDateInput.value);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                if (selectedDate < today) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    rescheduleDateInput.setCustomValidity('Older dates are not allowed!');
+                    if (rescheduleError) rescheduleError.textContent = 'Older dates are not allowed!';
+                    rescheduleDateInput.classList.add('is-invalid');
+                } else {
+                    rescheduleDateInput.setCustomValidity('');
+                    rescheduleDateInput.classList.remove('is-invalid');
+                }
+            }
+            
+            if (!form.checkValidity()) {
+              event.preventDefault()
+              event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+          }, false)
+        })
+    })()
+    
+    // Real-time date validation for main form
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateInput = document.getElementById('date');
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('min', today);
+        
+        dateInput.addEventListener('change', function() {
+            const dateError = document.getElementById('groomingDateError');
+            const selectedDate = new Date(this.value);
+            const todayDate = new Date();
+            todayDate.setHours(0, 0, 0, 0);
+            
+            if (selectedDate < todayDate) {
+                this.setCustomValidity('Older dates are not allowed!');
+                if (dateError) dateError.textContent = 'Older dates are not allowed!';
+                this.classList.add('is-invalid');
+            } else {
+                this.setCustomValidity('');
+                if (dateError) dateError.textContent = 'Please select a valid future date.';
+                this.classList.remove('is-invalid');
+            }
+        });
+        
+        // Real-time date validation for reschedule modal
+        const rescheduleDateInput = document.getElementById('rescheduleDateField');
+        if (rescheduleDateInput) {
+            rescheduleDateInput.setAttribute('min', today);
+            
+            rescheduleDateInput.addEventListener('change', function() {
+                const rescheduleError = document.getElementById('rescheduleError');
+                const selectedDate = new Date(this.value);
+                const todayDate = new Date();
+                todayDate.setHours(0, 0, 0, 0);
+                
+                if (selectedDate < todayDate) {
+                    this.setCustomValidity('Older dates are not allowed!');
+                    if (rescheduleError) rescheduleError.textContent = 'Older dates are not allowed!';
+                    this.classList.add('is-invalid');
+                } else {
+                    this.setCustomValidity('');
+                    if (rescheduleError) rescheduleError.textContent = 'Please select a valid future date.';
+                    this.classList.remove('is-invalid');
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

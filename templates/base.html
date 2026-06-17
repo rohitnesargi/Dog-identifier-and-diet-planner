@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Identifier & Diet Planner</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- TOP NAVBAR -->
+    <nav class="navbar-custom">
+        <a href="{{ url_for('index') }}" class="logo">Dog Identifier</a>
+        <div class="nav-links" style="display: flex; align-items: center;">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('about') }}">About</a>
+            <a href="{{ url_for('services') }}">Services</a>
+            <a href="{{ url_for('vets') }}">Vets</a>
+            {% if 'user' in session %}
+                <div class="nav-item-dropdown">
+                    <span class="dropdown-trigger">Pet Care ▾</span>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('health_dashboard') }}">Health Dashboard</a>
+                        <a href="{{ url_for('vaccination') }}">Vaccination Reminder</a>
+                        <a href="{{ url_for('grooming') }}">Grooming Scheduler</a>
+                        <a href="{{ url_for('disease_prediction') }}">Symptom Checker</a>
+                    </div>
+                </div>
+            {% endif %}
+            <a href="{{ url_for('profile') }}">Profile</a>
+            {% if 'user' in session or 'admin' in session %}
+                {% if 'admin' in session %}
+                    <a href="{{ url_for('admin_logout') }}" style="color: #ffca2c; font-weight: bold;">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('logout') }}" style="color: #ffca2c; font-weight: bold;">Logout</a>
+                {% endif %}
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="container py-5 flex-grow-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        &copy; 2026 Dog Breed & Diet Planner. All rights reserved.
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

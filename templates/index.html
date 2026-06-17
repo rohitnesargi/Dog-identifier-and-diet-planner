@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="glass-card text-center" style="width: 100%; max-width: 700px; padding: 50px;">
+        <h2 class="page-title">Welcome, {{ user }}! 🐾</h2>
+        
+        <p class="page-subtitle">
+            Upload a photo of your dog to identify its breed and get a custom, AI-powered diet plan!
+        </p>
+
+        <div class="upload-section mx-auto" style="max-width: 500px;">
+            <h3 class="mb-4 text-dark fw-bold">Upload Dog Image</h3>
+
+            <form method="POST" enctype="multipart/form-data" class="d-flex flex-column align-items-center">
+                <input type="file" name="image" required class="form-control form-control-custom mb-3" accept="image/*">
+                
+                <button type="submit" class="btn-primary-custom w-100 fs-5">
+                    Predict Breed 🚀
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

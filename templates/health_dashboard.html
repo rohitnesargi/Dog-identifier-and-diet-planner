@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="glass-card p-5 mx-auto" style="max-width: 1100px; background: rgba(255, 255, 255, 0.85);">
+        <h1 class="page-title text-center fw-bold mb-1" style="font-size: 2.5rem; color: #2c3e50;">Health Dashboard</h1>
+        <p class="text-muted text-center mb-5">A comprehensive overview of your dog's health and wellness.</p>
+
+        <!-- Cards Grid -->
+        <div class="row g-4 mb-5">
+            <!-- Vaccinations Card -->
+            <div class="col-md-4">
+                <div class="glass-sub-card text-center p-4 dashboard-card-vaccine d-flex flex-column justify-content-between align-items-center" style="height: 100%; border: 1.5px solid rgba(13, 110, 253, 0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                    <div>
+                        <div class="fs-1 mb-3">💉</div>
+                        <h4 class="fw-bold mb-2" style="color: #2c3e50;">Vaccinations</h4>
+                        <p class="text-muted fs-6 mb-4">Stay updated on essential shots.</p>
+                        
+                        <div class="my-4">
+                            {% if latest_vaccine %}
+                                <div class="fw-bold text-dark mb-1" style="font-size: 1.1rem;">Latest: {{ latest_vaccine.vaccine_name }}</div>
+                                <div class="text-secondary fw-semibold">{{ latest_vaccine.date }}</div>
+                            {% else %}
+                                <div class="text-muted fs-7">No vaccinations scheduled</div>
+                                <div class="text-secondary fw-semibold">—</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="w-100">
+                        <a href="{{ url_for('vaccination') }}" class="btn btn-primary w-100 py-2 fw-semibold" style="border-radius: 8px; background-color: #2f54eb; border: none;">
+                            View All
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grooming Card -->
+            <div class="col-md-4">
+                <div class="glass-sub-card text-center p-4 dashboard-card-grooming d-flex flex-column justify-content-between align-items-center" style="height: 100%; border: 1.5px solid rgba(255, 193, 7, 0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                    <div>
+                        <div class="fs-1 mb-3">✂️</div>
+                        <h4 class="fw-bold mb-2" style="color: #2c3e50;">Grooming</h4>
+                        <p class="text-muted fs-6 mb-4">Hygiene and beauty schedule.</p>
+                        
+                        <div class="my-4">
+                            {% if next_grooming %}
+                                <div class="fw-bold text-dark mb-1" style="font-size: 1.1rem;">Next: {{ next_grooming.service_type }}</div>
+                                <div class="text-secondary fw-semibold">{{ next_grooming.date }} at {{ next_grooming.time }}</div>
+                            {% else %}
+                                <div class="text-muted fs-7">No grooming sessions booked</div>
+                                <div class="text-secondary fw-semibold">—</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="w-100">
+                        <a href="{{ url_for('grooming') }}" class="btn btn-warning w-100 py-2 fw-semibold text-white" style="border-radius: 8px; background-color: #ff9f1c; border: none;">
+                            Manage
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Symptom Checker / Disease Prediction Card -->
+            <div class="col-md-4">
+                <div class="glass-sub-card text-center p-4 dashboard-card-symptoms d-flex flex-column justify-content-between align-items-center" style="height: 100%; border: 1.5px solid rgba(220, 53, 69, 0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                    <div>
+                        <div class="fs-1 mb-3">🩺</div>
+                        <h4 class="fw-bold mb-2" style="color: #2c3e50;">Symptom Checker</h4>
+                        <p class="text-muted fs-6 mb-4">Quickly analyze unusual behavior.</p>
+                        
+                        <div class="my-4">
+                            <p class="text-muted mb-0" style="font-size: 0.9rem; line-height: 1.5;">Identify potential issues early and seek professional help.</p>
+                        </div>
+                    </div>
+                    <div class="w-100">
+                        <a href="{{ url_for('disease_prediction') }}" class="btn btn-danger w-100 py-2 fw-semibold" style="border-radius: 8px; background-color: #e63946; border: none;">
+                            Start Analysis
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="{{ url_for('services') }}" class="back-btn" style="margin-top: 0;">⬅ Back to Services</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

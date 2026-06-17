@@ -1,0 +1,15 @@
+
+DOG REPORT
+====================
+
+Breed: Great_Dane
+Confidence: 86.0 %
+
+Size: large
+
+Food: High-Protein Great Dane Specific Formula
+Meals: 2 large meals per day (Morning & Night)
+Extras: Carrots and salmon oil
+
+Generated:
+2026-06-13 16:19:49.593513

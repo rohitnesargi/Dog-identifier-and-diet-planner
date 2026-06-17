@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh; padding-top: 40px; padding-bottom: 40px;">
+    <div class="glass-card" style="width: 100%; max-width: 1100px; padding: 40px; background: rgba(255, 255, 255, 0.85);">
+        <h1 class="page-title text-center mb-5 fw-bold" style="font-size: 2.5rem; color: #2c3e50;">Our Services</h1>
+        
+        <div class="row g-4 mb-4">
+            <!-- Breed Identification -->
+            <div class="col-md-6">
+                <div class="p-4 rounded h-100 text-center glass-sub-card" style="transition: transform 0.3s;">
+                    <h4 class="fw-bold text-primary mb-3">🐶 Breed Identification</h4>
+                    <p class="text-muted mb-0">Upload a photo of your dog and our advanced AI will accurately identify its breed with high precision.</p>
+                </div>
+            </div>
+            
+            <!-- Custom Diet Plans -->
+            <div class="col-md-6">
+                <div class="p-4 rounded h-100 text-center glass-sub-card" style="transition: transform 0.3s;">
+                    <h4 class="fw-bold text-success mb-3">🍓 Custom Diet Plans</h4>
+                    <p class="text-muted mb-0">Receive personalized dietary recommendations based on your dog's specific breed, age, and size.</p>
+                </div>
+            </div>
+
+            <!-- Vet Recommendations -->
+            <div class="col-md-6">
+                <div class="p-4 rounded h-100 text-center glass-sub-card" style="transition: transform 0.3s;">
+                    <h4 class="fw-bold text-warning mb-3">🧑‍⚕️ Vet Recommendations</h4>
+                    <p class="text-muted mb-0">Find top-rated veterinarians near you with directly embedded Google Maps for easy navigation.</p>
+                </div>
+            </div>
+
+            <!-- Product Links -->
+            <div class="col-md-6">
+                <div class="p-4 rounded h-100 text-center glass-sub-card" style="transition: transform 0.3s;">
+                    <h4 class="fw-bold text-danger mb-3">🛒 Product Links</h4>
+                    <p class="text-muted mb-0">Get direct links to purchase the best-recommended dog food from Amazon instantly.</p>
+                </div>
+            </div>
+
+            <!-- Disease Prediction -->
+            <div class="col-md-6">
+                <div class="p-4 rounded h-100 text-center glass-sub-card" style="transition: transform 0.3s;">
+                    <h4 class="fw-bold mb-3" style="color: #00d2ff;">🩺 Disease Prediction</h4>
+                    <p class="text-muted mb-4">Analyze your dog's symptoms to identify potential health issues early.</p>
+                    <a href="{{ url_for('disease_prediction') }}" class="btn-outline-custom-blue">Try Now</a>
+                </div>
+            </div>
+
+            <!-- Vaccination Reminder -->
+            <div class="col-md-6">
+                <div class="p-4 rounded h-100 text-center glass-sub-card" style="transition: transform 0.3s;">
+                    <h4 class="fw-bold mb-3" style="color: #4a6cf7;">💉 Vaccination Reminder</h4>
+                    <p class="text-muted mb-4">Never miss a vaccination with our easy-to-use tracking and reminder system.</p>
+                    <a href="{{ url_for('vaccination') }}" class="btn-outline-custom-blue">Schedule</a>
+                </div>
+            </div>
+
+            <!-- Grooming Scheduler -->
+            <div class="col-md-6">
+                <div class="p-4 rounded h-100 text-center glass-sub-card" style="transition: transform 0.3s;">
+                    <h4 class="fw-bold text-dark mb-3">✂️ Grooming Scheduler</h4>
+                    <p class="text-muted mb-4">Plan your dog's grooming sessions and keep them clean and healthy.</p>
+                    <a href="{{ url_for('grooming') }}" class="btn-outline-custom-dark">Book Now</a>
+                </div>
+            </div>
+
+            <!-- Health Dashboard -->
+            <div class="col-md-6">
+                <div class="p-4 rounded h-100 text-center glass-sub-card" style="transition: transform 0.3s;">
+                    <h4 class="fw-bold text-dark mb-3">📊 Health Dashboard</h4>
+                    <p class="text-muted mb-4">Get a bird's eye view of all your pet's health metrics and upcoming events.</p>
+                    <a href="{{ url_for('health_dashboard') }}" class="btn-outline-custom-dark">View Dashboard</a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-5 text-center">
+            <a href="{{ url_for('index') }}" class="back-btn" style="margin-top: 0;">⬅ Back to Homepage</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

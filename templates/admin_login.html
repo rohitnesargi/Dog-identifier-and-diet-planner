@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login - Dog Identifier & Diet Planner</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        background: #000;
+    }
+
+    /* Full-screen background image */
+    .bg-top {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('/static/images/dog1.jpg') no-repeat center center;
+        background-size: cover;
+        z-index: -1;
+    }
+
+    .auth-card {
+        background: rgba(255, 255, 255, 0.85); /* Transparent form */
+        border-radius: 20px;
+        padding: 40px 30px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+        text-align: center;
+        position: relative;
+        z-index: 10;
+    }
+
+    .logo-icon {
+        font-size: 35px;
+        color: #dc3545;
+        margin-bottom: 10px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 70px;
+        height: 70px;
+        border: 2px dashed #dc3545;
+        border-radius: 15px;
+    }
+
+    .brand-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #202124;
+        line-height: 1.2;
+    }
+    
+    .brand-title span {
+        color: #dc3545;
+        display: block;
+    }
+
+    .subtitle {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #5f6368;
+        margin-bottom: 25px;
+    }
+    
+    .subtitle strong {
+        color: #202124;
+        display: block;
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    .input-group-custom {
+        position: relative;
+        margin-bottom: 15px;
+    }
+
+    .input-group-custom i.left-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9aa0a6;
+    }
+
+    .input-group-custom input {
+        width: 100%;
+        padding: 12px 45px 12px 45px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.3s;
+    }
+
+    .input-group-custom input:focus {
+        border-color: #dc3545;
+    }
+
+    /* Show/hide password icon */
+    .input-group-custom .toggle-password {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #dc3545;
+        font-size: 16px;
+        transition: color 0.2s;
+    }
+    .input-group-custom .toggle-password:hover {
+        color: #bb2d3b;
+    }
+
+    .btn-auth {
+        background: #dc3545;
+        color: white;
+        border: none;
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: background 0.3s;
+    }
+    .btn-auth:hover {
+        background: #bb2d3b;
+    }
+
+    .register-link {
+        display: block;
+        margin-top: 20px;
+        font-size: 13px;
+        color: #5f6368;
+    }
+
+    .register-link a {
+        color: #dc3545;
+        text-decoration: none;
+        font-weight: 600;
+    }
+</style>
+</head>
+<body>
+
+<div class="bg-top"></div>
+
+<div class="auth-card">
+    <div class="logo-icon">
+        <i class="fa-solid fa-shield-halved"></i>
+    </div>
+    <div class="brand-title">
+        Secure Access
+        <span>Admin Portal</span>
+    </div>
+
+    <div class="subtitle">
+        <strong>Welcome Admin!</strong>
+        Login to manage the platform
+    </div>
+
+    {% if message %}
+    <div class="alert alert-danger p-2" style="font-size: 13px;">
+        {{ message }}
+    </div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('admin_login') }}">
+        <div class="input-group-custom text-start">
+            <i class="fa-regular fa-envelope left-icon"></i>
+            <input type="email" id="admin_email" name="email" placeholder="Admin Email" required>
+        </div>
+
+        <div class="input-group text-start mb-4">
+            <input type="password" id="admin_password" name="password" class="form-control" placeholder="Password" required style="border-radius: 8px 0 0 8px; border: 1px solid #e0e0e0; border-right: none; padding: 12px; font-size: 14px; outline: none; background: white; transition: all 0.3s; box-shadow: none;">
+            <span class="input-group-text toggle-password" data-input="admin_password" style="cursor: pointer; border-radius: 0 8px 8px 0; background-color: #f1f3f4; border: 1px solid #e0e0e0; border-left: none; min-width: 50px; justify-content: center; display: flex; align-items: center;">
+                <i class="fa-solid fa-eye-slash text-secondary"></i>
+            </span>
+        </div>
+
+        <button type="submit" class="btn-auth">Login as Admin</button>
+    </form>
+
+    <div class="register-link">
+        <a href="{{ url_for('login') }}" style="color: #999;">⬅ Back to User Login</a>
+    </div>
+</div>
+
+<script>
+    // Show/Hide password
+    document.querySelectorAll('.toggle-password').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const inputId = btn.getAttribute('data-input');
+            const inputField = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            if (inputField.type === 'password') {
+                inputField.type = 'text';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                inputField.type = 'password';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

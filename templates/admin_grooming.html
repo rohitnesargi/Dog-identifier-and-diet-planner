@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Style Overrides for Admin cockpit -->
+    <style>
+        body {
+            background: #eef2f7 url('/static/images/dog1.jpg') no-repeat center center fixed !important;
+            background-size: cover !important;
+        }
+        .admin-title {
+            color: #2c3e50;
+            font-weight: 800;
+        }
+        .stat-card {
+            border: none;
+            border-radius: 16px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background: rgba(255,255,255,0.9);
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06) !important;
+        }
+        .text-primary-custom {
+            color: #1a73e8 !important;
+        }
+        .badge-pending {
+            background-color: #fef7e0;
+            color: #b06000;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(240, 180, 0, 0.2);
+        }
+        .badge-approved {
+            background-color: #e6f4ea;
+            color: #137333;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(19, 115, 51, 0.2);
+        }
+        .badge-rejected {
+            background-color: #fce8e6;
+            color: #c5221f;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(197, 34, 31, 0.2);
+        }
+        .badge-scheduled {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(26, 115, 232, 0.2);
+        }
+        .badge-completed {
+            background-color: #d1e7dd;
+            color: #0f5132;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(15, 81, 50, 0.2);
+        }
+        .badge-cancelled {
+            background-color: #e2e3e5;
+            color: #6c757d;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(108, 117, 125, 0.2);
+        }
+        .hover-scale {
+            transition: transform 0.2s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+    </style>
+
+    <div class="glass-card p-5 mx-auto w-100" style="max-width: 1150px; background: rgba(255, 255, 255, 0.95); border: 1.5px solid rgba(44, 62, 80, 0.15);">
+        
+        <!-- Admin Dashboard Sub-Navigation -->
+        <div class="d-flex gap-3 justify-content-center mb-5 flex-wrap">
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary px-4 py-2 fw-semibold" style="border-radius: 8px;">👥 Registered Users</a>
+            <a href="{{ url_for('admin_vaccinations') }}" class="btn btn-outline-primary px-4 py-2 fw-semibold" style="border-radius: 8px; border-color: #4a6cf7; color: #4a6cf7;">💉 Vaccinations</a>
+            <a href="{{ url_for('admin_grooming') }}" class="btn btn-primary px-4 py-2 fw-bold" style="border-radius: 8px; background-color: #1a73e8; border: none; box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);">✂️ Grooming Bookings</a>
+        </div>
+
+        <h1 class="admin-title text-center mb-1">🐾 Grooming Dashboard</h1>
+        <p class="text-muted text-center mb-5">Review incoming spa scheduling requests, approve bookings, add instructions and complete appointments.</p>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, msg in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' or category == 'danger' else 'warning' if category == 'warning' else 'success' }} alert-dismissible fade show mb-4 border-0" role="alert" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                        {{ msg }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Stat Cards Row -->
+        <div class="row g-3 mb-5">
+            <!-- Total -->
+            <div class="col-6 col-md-2.4 col-lg">
+                <div class="card stat-card shadow-sm text-center p-3" style="border-left: 5px solid #2c3e50 !important;">
+                    <small class="text-secondary fw-bold text-uppercase" style="font-size: 0.75rem;">Total Bookings</small>
+                    <h2 class="fw-extrabold text-dark mt-2 mb-0" style="font-size: 2rem;">{{ stats.total }}</h2>
+                </div>
+            </div>
+            <!-- Pending -->
+            <div class="col-6 col-md-2.4 col-lg">
+                <div class="card stat-card shadow-sm text-center p-3" style="border-left: 5px solid #f0b400 !important; background: #fffdf5;">
+                    <small class="text-warning fw-bold text-uppercase" style="font-size: 0.75rem;">Pending</small>
+                    <h2 class="fw-extrabold text-warning mt-2 mb-0" style="font-size: 2rem;">{{ stats.pending }}</h2>
+                </div>
+            </div>
+            <!-- Approved -->
+            <div class="col-6 col-md-2.4 col-lg">
+                <div class="card stat-card shadow-sm text-center p-3" style="border-left: 5px solid #1a73e8 !important; background: #f5f9ff;">
+                    <small class="text-primary fw-bold text-uppercase" style="font-size: 0.75rem;">Approved</small>
+                    <h2 class="fw-extrabold text-primary mt-2 mb-0" style="font-size: 2rem;">{{ stats.approved }}</h2>
+                </div>
+            </div>
+            <!-- Completed -->
+            <div class="col-6 col-md-2.4 col-lg">
+                <div class="card stat-card shadow-sm text-center p-3" style="border-left: 5px solid #137333 !important; background: #f6fdf9;">
+                    <small class="text-success fw-bold text-uppercase" style="font-size: 0.75rem;">Completed</small>
+                    <h2 class="fw-extrabold text-success mt-2 mb-0" style="font-size: 2rem;">{{ stats.completed }}</h2>
+                </div>
+            </div>
+            <!-- Cancelled -->
+            <div class="col-12 col-md-2.4 col-lg">
+                <div class="card stat-card shadow-sm text-center p-3" style="border-left: 5px solid #6c757d !important; background: #fafafa;">
+                    <small class="text-secondary fw-bold text-uppercase" style="font-size: 0.75rem;">Cancelled</small>
+                    <h2 class="fw-extrabold text-secondary mt-2 mb-0" style="font-size: 2rem;">{{ stats.cancelled }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Requests Database Table -->
+        <div class="card border-0 shadow-sm p-4" style="background: rgba(255, 255, 255, 0.7); border-radius: 15px;">
+            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                <h3 class="fw-bold mb-0 text-primary-custom" style="font-size: 1.4rem;">📁 All Grooming Records</h3>
+                <div class="position-relative" style="max-width: 250px;">
+                    <input type="text" id="adminGroomingSearch" onkeyup="filterAdminGroomingTable()" class="form-control form-control-sm py-2 px-3 shadow-none border" style="border-radius: 30px;" placeholder="Search pet, service or user...">
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle border-0" id="adminGroomingTable">
+                    <thead>
+                        <tr class="text-secondary" style="font-size: 0.9rem;">
+                            <th class="border-0">User</th>
+                            <th class="border-0">Pet Name</th>
+                            <th class="border-0">Service Requested</th>
+                            <th class="border-0">Date & Time</th>
+                            <th class="border-0">Special Instructions</th>
+                            <th class="border-0">Status</th>
+                            <th class="border-0 text-center" style="width: 240px;">Control Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if records %}
+                            {% for r in records %}
+                            <tr class="admin-grooming-row">
+                                <td class="fw-bold text-dark search-user">{{ r.username }}</td>
+                                <td>
+                                    <div class="fw-bold text-secondary search-pet">{{ r.pet_name }}</div>
+                                </td>
+                                <td class="search-service">{{ r.service_type }}</td>
+                                <td>
+                                    <div class="fw-semibold text-dark">{{ r.grooming_date }}</div>
+                                    <small class="text-muted">{{ r.grooming_time_12hr }}</small>
+                                </td>
+                                <td>
+                                    {% if r.special_instruction %}
+                                        <div class="small text-secondary" style="max-width: 180px; overflow-wrap: break-word;">
+                                            {{ r.special_instruction }}
+                                        </div>
+                                    {% else %}
+                                        <span class="text-muted small">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if r.status == 'Pending Approval' %}
+                                        <span class="badge-pending">Pending</span>
+                                    {% elif r.status == 'Approved' %}
+                                        <span class="badge-approved">Approved</span>
+                                    {% elif r.status == 'Rejected' %}
+                                        <span class="badge-rejected">Rejected</span>
+                                    {% elif r.status == 'Scheduled' %}
+                                        <span class="badge-scheduled">Scheduled</span>
+                                    {% elif r.status == 'Completed' %}
+                                        <span class="badge-completed">Completed</span>
+                                    {% elif r.status == 'Cancelled' %}
+                                        <span class="badge-cancelled">Cancelled</span>
+                                    {% endif %}
+                                    
+                                    {% if r.admin_remark %}
+                                        <div class="text-muted small mt-1" style="font-size: 0.75rem; max-width: 150px; overflow-wrap: break-word;">
+                                            <strong>Remark:</strong> {{ r.admin_remark }}
+                                        </div>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        {% if r.status == 'Pending Approval' %}
+                                            <button type="button" onclick="triggerDecision('{{ r.id }}', 'approve', '{{ r.pet_name }}', '{{ r.service_type }}')" class="btn btn-sm btn-success py-1 px-3 text-white fw-bold hover-scale" style="font-size: 0.8rem; border-radius: 6px; border: none;">
+                                                Approve
+                                            </button>
+                                            <button type="button" onclick="triggerDecision('{{ r.id }}', 'reject', '{{ r.pet_name }}', '{{ r.service_type }}')" class="btn btn-sm btn-danger py-1 px-3 text-white fw-bold hover-scale" style="font-size: 0.8rem; border-radius: 6px; border: none;">
+                                                Reject
+                                            </button>
+                                        {% elif r.status == 'Approved' %}
+                                            <button type="button" onclick="triggerDecision('{{ r.id }}', 'complete', '{{ r.pet_name }}', '{{ r.service_type }}')" class="btn btn-sm btn-primary py-1 px-3 text-white fw-bold hover-scale" style="font-size: 0.8rem; border-radius: 6px; border: none; background-color: #137333;">
+                                                Complete Session
+                                            </button>
+                                        {% else %}
+                                            <span class="text-muted small">Processed</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-5">
+                                    <div class="fs-1">🛁</div>
+                                    <div class="fw-semibold mt-2">No grooming appointments filed.</div>
+                                    <small class="text-black-50">Sessions list displays here when users schedule appointments.</small>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Admin Booking Decision Modal -->
+<div class="modal fade" id="decisionModal" tabindex="-1" aria-labelledby="decisionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 18px; overflow: hidden;">
+      <div class="modal-header py-3 text-white" id="decisionHeader">
+        <h5 class="modal-title fw-bold" id="decisionModalLabel">Process Grooming</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="decisionForm" method="POST">
+        <div class="modal-body p-4">
+          <p id="decisionPrompt" class="fw-semibold text-dark mb-4">Are you sure you want to process this booking?</p>
+          <input type="hidden" id="bookingIdField" name="booking_id">
+          <input type="hidden" id="actionField" name="action">
+          
+          <div class="mb-3">
+            <label class="form-label fw-bold text-dark">Admin Remark / Feedback (Optional)</label>
+            <textarea class="form-control shadow-none border" name="admin_remark" rows="3" placeholder="e.g. Approved slot at Room A / Pet sensitive to dry air..." style="border-radius: 8px; font-size: 0.9rem;"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer border-0 p-3 bg-light">
+          <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal" style="border-radius: 8px;">Cancel</button>
+          <button type="submit" id="decisionSubmitBtn" class="btn px-4 fw-bold text-white" style="border-radius: 8px;">Confirm Action</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts for interactive admin table filtering & modals -->
+<script>
+    // Trigger modal window with details dynamically configured
+    function triggerDecision(bookingId, action, petName, serviceType) {
+        document.getElementById('bookingIdField').value = bookingId;
+        document.getElementById('actionField').value = action;
+        
+        const label = document.getElementById('decisionModalLabel');
+        const header = document.getElementById('decisionHeader');
+        const submitBtn = document.getElementById('decisionSubmitBtn');
+        const prompt = document.getElementById('decisionPrompt');
+        
+        if (action === 'approve') {
+            label.textContent = "✅ Approve Grooming Appointment";
+            header.style.backgroundColor = "#1a73e8";
+            submitBtn.style.backgroundColor = "#1a73e8";
+            submitBtn.style.border = "none";
+            submitBtn.textContent = "Approve Appointment";
+            prompt.textContent = `Are you sure you want to APPROVE the ${serviceType} request for ${petName}?`;
+        } else if (action === 'reject') {
+            label.textContent = "❌ Reject Grooming Request";
+            header.style.backgroundColor = "#c5221f";
+            submitBtn.style.backgroundColor = "#c5221f";
+            submitBtn.style.border = "none";
+            submitBtn.textContent = "Reject Appointment";
+            prompt.textContent = `Are you sure you want to REJECT the ${serviceType} request for ${petName}?`;
+        } else if (action === 'complete') {
+            label.textContent = "🐾 Complete Grooming Session";
+            header.style.backgroundColor = "#137333";
+            submitBtn.style.backgroundColor = "#137333";
+            submitBtn.style.border = "none";
+            submitBtn.textContent = "Mark Completed";
+            prompt.textContent = `Mark ${petName}'s ${serviceType} grooming session as COMPLETED?`;
+        }
+        
+        const form = document.getElementById('decisionForm');
+        form.action = "{{ url_for('admin_grooming') }}";
+        
+        const modal = new bootstrap.Modal(document.getElementById('decisionModal'));
+        modal.show();
+    }
+
+    // Live Search filtering
+    function filterAdminGroomingTable() {
+        const input = document.getElementById("adminGroomingSearch");
+        const filter = input.value.toLowerCase().trim();
+        const rows = document.getElementsByClassName("admin-grooming-row");
+        
+        for (let i = 0; i < rows.length; i++) {
+            const userCell = rows[i].getElementsByClassName("search-user")[0];
+            const petCell = rows[i].getElementsByClassName("search-pet")[0];
+            const serviceCell = rows[i].getElementsByClassName("search-service")[0];
+            
+            if (userCell && petCell && serviceCell) {
+                const user = userCell.textContent || userCell.innerText;
+                const pet = petCell.textContent || petCell.innerText;
+                const service = serviceCell.textContent || serviceCell.innerText;
+                
+                if (user.toLowerCase().indexOf(filter) > -1 || 
+                    pet.toLowerCase().indexOf(filter) > -1 || 
+                    service.toLowerCase().indexOf(filter) > -1) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+{% endblock %}

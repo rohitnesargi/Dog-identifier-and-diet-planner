@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="glass-card" style="width: 100%; max-width: 900px; padding: 40px;">
+        <h2 class="page-title text-center mb-4">Top Veterinarians in Belgaum</h2>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="p-3 rounded bg-white shadow-sm h-100">
+                    <h5 class="text-dark fw-bold mb-1">V Care Speciality Pet Hospital</h5>
+                    <p class="text-muted mb-2">📱 +91 8088906090</p>
+                    <iframe width="100%" height="200" frameborder="0" style="border:0; border-radius: 8px;" src="https://maps.google.com/maps?q=V+Care+Speciality+Pet+Hospital+Belgaum&t=&z=13&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 rounded bg-white shadow-sm h-100">
+                    <h5 class="text-dark fw-bold mb-1">Soulmates Vet Hospital</h5>
+                    <p class="text-muted mb-2">📱 +91 8314057274</p>
+                    <iframe width="100%" height="200" frameborder="0" style="border:0; border-radius: 8px;" src="https://maps.google.com/maps?q=Soulmates+Vet+Hospital+Belgaum&t=&z=13&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 rounded bg-white shadow-sm h-100">
+                    <h5 class="text-dark fw-bold mb-1">Wiggle & Waggle</h5>
+                    <p class="text-muted mb-2">📱 +91 9019878108</p>
+                    <iframe width="100%" height="200" frameborder="0" style="border:0; border-radius: 8px;" src="https://maps.google.com/maps?q=Wiggle+Waggle+Belgaum&t=&z=13&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 rounded bg-white shadow-sm h-100">
+                    <h5 class="text-dark fw-bold mb-1">Vet Care Polyclinic</h5>
+                    <p class="text-muted mb-2">📱 +91 7676606085</p>
+                    <iframe width="100%" height="200" frameborder="0" style="border:0; border-radius: 8px;" src="https://maps.google.com/maps?q=Vet+Care+Polyclinic+Belgaum&t=&z=13&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="{{ url_for('index') }}" class="back-btn">⬅ Back to Homepage</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
