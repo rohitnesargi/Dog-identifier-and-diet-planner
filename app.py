@@ -62,7 +62,7 @@ if not os.path.exists(EXCEL_FILE):
 # LOAD MODEL
 # ======================================================
 
-model = None
+model = tf.keras.applications.MobileNetV2(weights='imagenet')
 
 # ======================================================
 # USER FUNCTIONS
@@ -122,11 +122,7 @@ def check_user(email, password):
 
 def predict_breed(img_path):
 
-    print("STEP 1: Image loaded")
-
     img = Image.open(img_path).resize((224, 224))
-
-    print("STEP 2: Image resized")
 
     img_array = np.array(img)
 
@@ -134,11 +130,7 @@ def predict_breed(img_path):
 
     img_array = np.expand_dims(img_array, axis=0)
 
-    print("STEP 3: Starting prediction")
-
     predictions = model.predict(img_array)
-
-    print("STEP 4: Prediction completed")
 
     decoded = decode_predictions(predictions, top=1)[0][0]
 
@@ -146,10 +138,7 @@ def predict_breed(img_path):
 
     confidence = int(round(decoded[2] * 100))
 
-    print("STEP 5: Result generated")
-
     return breed, confidence
-
 # ======================================================
 # SERVE PHOTOS
 # ======================================================
@@ -271,8 +260,7 @@ def index():
 
         file.save(filepath)
 
-        breed = "Golden Retriever"
-        confidence = 95
+        breed, confidence = predict_breed(filepath)
 
         size = str(get_size_category(breed))
         exact_size = get_exact_size(breed, size)
