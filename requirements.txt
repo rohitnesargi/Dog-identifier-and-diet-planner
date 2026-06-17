@@ -1,1 +1,6 @@
- Flask==2.3.2tensorflow==2.16.1numpyPillowopenpyxlWerkzeuggunicorn
+ Flask==2.3.2
+numpy
+Pillow
+openpyxl
+Werkzeug
+gunicorn
